@@ -1,4 +1,4 @@
-const dbPromised = idb.open("finco", 1, function (upgradeDB) {
+const dbPromised = idb.open("finco", 1, (upgradeDB) => {
 	const teamsObjectStore = upgradeDB.createObjectStore("teams", {
 		keyPath: "id",
 	});
@@ -7,41 +7,41 @@ const dbPromised = idb.open("finco", 1, function (upgradeDB) {
 
 function saveForLater(team) {
 	dbPromised
-		.then(function (db) {
+		.then((db) => {
 			const tx = db.transaction("teams", "readwrite");
 			const store = tx.objectStore("teams");
 			// console.log(team);
 			store.put(team);
 			return tx.complete;
 		})
-		.then(function () {
+		.then(() => {
 			console.log("Data berhasil disimpan.");
 		});
 }
 
 function getAll() {
-	return new Promise(function (resolve, reject) {
+	return new Promise((resolve, reject) => {
 		dbPromised
-			.then(function (db) {
+			.then((db) => {
 				const tx = db.transaction("teams", "readonly");
 				const store = tx.objectStore("teams");
 				return store.getAll();
 			})
-			.then(function (teams) {
+			.then((teams) => {
 				resolve(teams);
 			});
 	});
 }
 
 function getById(id) {
-	return new Promise(function (resolve, reject) {
+	return new Promise((resolve, reject) => {
 		dbPromised
-			.then(function (db) {
+			.then((db) => {
 				const tx = db.transaction("teams", "readonly");
 				const store = tx.objectStore("teams");
 				return store.get(id);
 			})
-			.then(function (team) {
+			.then((team) => {
 				resolve(team);
 			});
 	});

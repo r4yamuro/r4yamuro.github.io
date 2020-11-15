@@ -1,4 +1,4 @@
-let base_url = `http://api.football-data.org/v2/`;
+let base_url = `https://api.football-data.org/v2/`;
 
 // Blok kode yang akan dipanggil jika fetch berhasil
 function status(response) {

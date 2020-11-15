@@ -23,6 +23,15 @@ function error(error) {
 	console.log(`Error: ${error}`);
 }
 
+const token = "2f24ea41fb704b1aa0fd03ec9b13b68e";
+const fetchApi = function (url) {
+	return fetch(url, {
+		headers: {
+			"X-Auth-Token": token,
+		},
+	});
+};
+
 // Blok kode untuk melakukan request data json
 function getKlasemen(idLiga, elem) {
 	if (`caches` in window) {
@@ -141,9 +150,7 @@ function getKlasemen(idLiga, elem) {
 			});
 	}
 
-	fetch(`${base_url}competitions/${idLiga}/standings`, {
-		headers: { "X-Auth-Token": "2f24ea41fb704b1aa0fd03ec9b13b68e" },
-	})
+	fetchApi(`${base_url}competitions/${idLiga}/standings`)
 		.then(status)
 		.then(json)
 		.then(function (data) {
@@ -403,9 +410,7 @@ function getTeamById() {
 			});
 		}
 
-		fetch(`${base_url}teams/${idParam}`, {
-			headers: { "X-Auth-Token": "2f24ea41fb704b1aa0fd03ec9b13b68e" },
-		})
+		fetchApi(`${base_url}teams/${idParam}`)
 			.then(status)
 			.then(json)
 			.then(function (data) {

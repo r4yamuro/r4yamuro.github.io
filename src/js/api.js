@@ -83,7 +83,7 @@ function getKlasemen(idLiga, elem) {
 							klasemenHTML += `
 							<tr>
 							<td>${el.position}</td>
-							<td><a href="./teams.html?id=${el.team.id}" class="center-item left-text"><img src="${el.team.crestUrl}" class="crest" loading="lazy"/>${el.team.name}</a></td>
+							<td><a href="./teams.html?id=${el.team.id}" class="center-item left-text blue-text text-darken-4"><img src="${el.team.crestUrl}" class="crest" loading="lazy" alt="${el.team.tla}"/><b>${el.team.name}</b></a></td>
 							<td>${el.playedGames}</td>
 							<td class="hide-on-small-and-down">${el.won}</td>
 							<td class="hide-on-small-and-down">${el.draw}</td>
@@ -199,7 +199,7 @@ function getKlasemen(idLiga, elem) {
 				klasemenHTML += `
 				<tr>
 				<td>${el.position}</td>
-				<td><a href="./teams.html?id=${el.team.id}" class="center-item left-text"><img src="${el.team.crestUrl}" class="crest" loading="lazy"/>${el.team.name}</a></td>
+				<td><a href="./teams.html?id=${el.team.id}" class="center-item left-text blue-text text-darken-4"><img src="${el.team.crestUrl}" class="crest" loading="lazy"alt="${el.team.tla}"/>${el.team.name}</a></td>
 				<td>${el.playedGames}</td>
 				<td class="hide-on-small-and-down">${el.won}</td>
 				<td class="hide-on-small-and-down">${el.draw}</td>

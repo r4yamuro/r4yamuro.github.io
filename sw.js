@@ -15,7 +15,7 @@ let urlsToCache = [
 	{ url: "/src/pages/fav.html", revision: "1" },
 	{ url: "/src/css/materialize.min.css", revision: "1" },
 	{ url: "/src/css/style.css", revision: "1" },
-	{ url: "/src/js/materialize.js", revision: "1" },
+	{ url: "/src/js/materialize.min.js", revision: "1" },
 	{ url: "/src/js/nav.js", revision: "1" },
 	{ url: "/src/js/api.js", revision: "4.5" },
 	{ url: "/src/js/idb.js", revision: "1" },

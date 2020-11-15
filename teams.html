@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="Football Info" />
+		<title>FINCO | Football Info</title>
+		<link rel="stylesheet" href="/src/css/style.css" />
+		<link rel="stylesheet" href="/src/css/materialize.min.css" />
+		<link rel="manifest" href="/manifest.json" />
+		<link rel="icon" type="image/png" href="/src/img/icon.png" />
+		<meta name="theme-color" content="#00b4cc" />
+	</head>
+	<body>
+		<!-- Start Nav -->
+		<div class="navbar-fixed">
+			<nav class="cyan darken-2 navbar-fixed navbar-material" role="navigation">
+				<div class="nav-wrapper container">
+					<a href="./" class="brand-logo"
+						><img
+							class="hide-on-small-only logo-area"
+							src="/src/img/ball.png"
+							alt="FINCO"
+						/>FINCO</a
+					>
+					<a href="./" data-target="nav-mobile" class="sidenav-trigger"
+						><i class="material-icons">arrow_back</i></a
+					>
+					<ul class="topnav right hide-on-med-and-down"></ul>
+				</div>
+			</nav>
+		</div>
+		<!-- End Nav -->
+
+		<div id="body-content"></div>
+		<!-- Start footer -->
+		<footer class="page-footer grey darken-3">
+			<div class="footer-copyright grey darken-4">
+				<div class="container">© 2020 Copyright Dicoding</div>
+			</div>
+		</footer>
+		<!-- End footer -->
+		<script src="/src/js/api.js"></script>
+		<script src="/src/js/materialize.js"></script>
+		<script src="/src/js/idb.js"></script>
+		<script src="/src/js/db.js"></script>
+		<script src="/src/js/nav.js"></script>
+
+		<script>
+			// REGISTER SERVICE WORKER
+			if ("serviceWorker" in navigator) {
+				window.addEventListener("load", () => {
+					navigator.serviceWorker
+						.register("sw.js")
+						.then((registration) => {
+							console.log("Registrasi ServiceWorker berhasil.");
+						})
+						.catch((err) => {
+							console.log("Registrasi ServiceWorker gagal:", err);
+						});
+				});
+			} else {
+				console.log("ServiceWorker belum didukung browser ini.");
+			}
+
+			document.addEventListener("DOMContentLoaded", function () {
+				getTeamById();
+			});
+		</script>
+	</body>
+</html>

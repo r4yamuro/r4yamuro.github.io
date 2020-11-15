@@ -1,0 +1,89 @@
+@font-face {
+	font-family: "Material Icons";
+	font-style: normal;
+	font-weight: 400;
+	src: url(../font/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format("woff2");
+}
+
+.material-icons {
+	font-family: "Material Icons";
+	font-weight: normal;
+	font-style: normal;
+	font-size: 24px;
+	line-height: 1;
+	letter-spacing: normal;
+	text-transform: none;
+	display: inline-block;
+	white-space: nowrap;
+	word-wrap: normal;
+	direction: ltr;
+	-moz-font-feature-settings: "liga";
+	-moz-osx-font-smoothing: grayscale;
+}
+
+#body-content {
+	padding-top: 75px;
+}
+
+body {
+	display: flex;
+	height: 100vh;
+	flex-direction: column;
+}
+
+.brand {
+	padding: 0 5px;
+}
+
+.justify-text {
+	text-align: justify;
+}
+
+.center-text {
+	text-align: center;
+}
+
+.crest {
+	width: 32px;
+	height: 32px;
+	float: left;
+	margin-right: 0.5rem;
+}
+
+.card.rounded {
+	border-radius: 15px;
+	border: 3px solid #00b4cc;
+	overflow: hidden;
+}
+
+.center-item {
+	object-fit: contain;
+	height: 100%;
+	align-items: center;
+}
+
+.left-text {
+	float: left;
+}
+
+@media only screen and (min-width: 993px) {
+	.two-column {
+		column-width: auto;
+		column-count: 3;
+		column-gap: auto;
+	}
+}
+
+@media only screen and (max-width: 992px) {
+	.htwo-column {
+		column-count: auto;
+	}
+}
+
+.button-row {
+	padding: 0;
+}
+
+footer {
+	margin-top: auto;
+}

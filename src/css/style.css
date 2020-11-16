@@ -88,3 +88,26 @@ body {
 footer {
 	margin-top: auto;
 }
+
+.modal {
+	left: 0;
+	right: 0;
+	border-radius: 24px !important;
+	padding: 0;
+	max-height: 40%;
+	width: 35%;
+	will-change: top, opacity;
+}
+
+.modal .modal-footer {
+	border-radius: 0 0 2px 2px;
+	padding: 4px 6px;
+	height: 60px;
+	width: 100%;
+	text-align: right;
+}
+
+.modal-action.btn {
+	margin: 6px 15px !important;
+	border-radius: 15px;
+}

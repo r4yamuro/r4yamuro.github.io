@@ -3,7 +3,11 @@ let base_url = `https://api.football-data.org/v2/`;
 // Blok kode yang akan dipanggil jika fetch berhasil
 function status(response) {
 	if (response.status !== 200) {
-		console.log(`Error: ${response.status}`);
+		M.toast({
+			html: `Error: ${response.status}`,
+			classes: "rounded pink  darken-1",
+		});
+
 		// Method reject() akan membuat blok catch terpanggil
 		return Promise.reject(new Error(response.statusText));
 	} else {
@@ -20,7 +24,10 @@ function json(response) {
 // Blok kode untuk meng-handle kesalahan di blok catch
 function error(error) {
 	// Parameter error berasal dari Promise.reject()
-	console.log(`Error: ${error}`);
+	M.toast({
+		html: `Error: ${error}`,
+		classes: "rounded pink  darken-1",
+	});
 }
 
 const token = "2f24ea41fb704b1aa0fd03ec9b13b68e";
@@ -206,7 +213,7 @@ function getKlasemen(idLiga, elem) {
 				klasemenHTML += `
 				<tr>
 				<td>${el.position}</td>
-				<td><a href="./teams.html?id=${el.team.id}" class="center-item left-text blue-text text-darken-4"><img src="${el.team.crestUrl}" class="crest" loading="lazy"alt="${el.team.tla}"/>${el.team.name}</a></td>
+				<td><a href="./teams.html?id=${el.team.id}" class="center-item left-text blue-text text-darken-4"><img src="${el.team.crestUrl}" class="crest" loading="lazy"alt="${el.team.tla}"/><b>${el.team.name}</b></a></td>
 				<td>${el.playedGames}</td>
 				<td class="hide-on-small-and-down">${el.won}</td>
 				<td class="hide-on-small-and-down">${el.draw}</td>
@@ -294,34 +301,36 @@ function getTeamById() {
 		let idParam = urlParams.get("id");
 
 		if (`caches` in window) {
-			caches.match(`${base_url}teams/${idParam}`).then(function (response) {
-				if (response) {
-					response.json().then(function (data) {
-						console.log(data);
-						let renderPlayer = "";
-						let renderCoach = "";
-						let renderKompetisi = "";
-						data.squad.forEach(function (player) {
-							if (player.role === "PLAYER") {
-								renderPlayer += `
+			caches
+				.match(`${base_url}teams/${idParam}`)
+				.then(function (response) {
+					if (response) {
+						response.json().then(function (data) {
+							console.log(data);
+							let renderPlayer = "";
+							let renderCoach = "";
+							let renderKompetisi = "";
+							data.squad.forEach(function (player) {
+								if (player.role === "PLAYER") {
+									renderPlayer += `
 								<li><span class="blue-text">${player.name}</span>, ${player.position} (${player.nationality})</li>
 								`;
-							} else {
-								renderCoach += `
+								} else {
+									renderCoach += `
 								<li><span class="blue-text">${player.name}</span>, ${player.role.replace(
-									/_/gi,
-									" "
-								)} (${player.nationality})</li>
+										/_/gi,
+										" "
+									)} (${player.nationality})</li>
 								`;
-							}
-						});
-						data.activeCompetitions.forEach(function (kompetisi, index) {
-							renderKompetisi += `<tr><td>${index + 1}. </td><td>${
-								kompetisi.name
-							} (${kompetisi.area.name})<td></tr>`;
-						});
+								}
+							});
+							data.activeCompetitions.forEach(function (kompetisi, index) {
+								renderKompetisi += `<tr><td>${index + 1}. </td><td>${
+									kompetisi.name
+								} (${kompetisi.area.name})<td></tr>`;
+							});
 
-						let teamHTML = `
+							let teamHTML = `
 						<h4 class="header container">${data.name}</h4>
 						<div class="row container">
 							<div class="card horizontal col s12 m10 offset-m1">
@@ -394,20 +403,24 @@ function getTeamById() {
 							</div>
 						<div>		
 						`;
-						elementReady(`.tabs`).then(function (el) {
-							let instance = M.Tabs.init(el, {});
-						});
+							elementReady(`.tabs`).then(function (el) {
+								let instance = M.Tabs.init(el, {});
+							});
 
-						// Sisipkan komponen card ke dalam elemen dengan id #content
-						document.getElementById("body-content").innerHTML = teamHTML;
-						const btnAdd = document.getElementById("add");
-						btnAdd.addEventListener("click", () => {
-							console.log("Klub telah ditambahkan ke daftar favorit");
-							saveForLater(data);
+							// Sisipkan komponen card ke dalam elemen dengan id #content
+							document.getElementById("body-content").innerHTML = teamHTML;
+							const btnAdd = document.getElementById("add");
+							btnAdd.addEventListener("click", () => {
+								saveForLater(data);
+								M.toast({
+									html: `Klub ${data.name} telah ditambahkan ke daftar favorit.`,
+									classes: "rounded light-blue darken-3",
+								});
+							});
 						});
-					});
-				}
-			});
+					}
+				})
+				.catch(error);
 		}
 
 		fetchApi(`${base_url}teams/${idParam}`)
@@ -522,8 +535,11 @@ function getTeamById() {
 				document.getElementById("body-content").innerHTML = teamHTML;
 				const btnAdd = document.getElementById("add");
 				btnAdd.addEventListener("click", () => {
-					alert("Klub telah ditambahkan ke daftar favorit");
 					saveForLater(data);
+					M.toast({
+						html: `Klub ${data.name} telah ditambahkan ke daftar favorit.`,
+						classes: "rounded light-blue darken-3",
+					});
 				});
 			})
 			.catch(error);
@@ -540,104 +556,130 @@ function getSavedTeams() {
 
 		teams.forEach(function (team, index) {
 			// console.log(team);
+
+			// Render Squad
 			let renderPlayer = "";
 			let renderCoach = "";
 			let renderKompetisi = "";
 			team.squad.forEach(function (player) {
 				if (player.role === "PLAYER") {
 					renderPlayer += `
-						<li><span class="blue-text">${player.name}</span>, ${player.position} (${player.nationality})</li>
-					`;
+							<li><span class="blue-text">${player.name}</span>, ${player.position} (${player.nationality})</li>
+						`;
 				} else {
 					renderCoach += `
-						<li><span class="blue-text">${player.name}</span>, ${player.role.replace(
+							<li><span class="blue-text">${player.name}</span>, ${player.role.replace(
 						/_/gi,
 						" "
 					)} (${player.nationality})</li>
-					`;
+						`;
 				}
 			});
+
+			// Render Kompetisi aktif
 			team.activeCompetitions.forEach(function (kompetisi, index) {
 				renderKompetisi += `<tr><td>${index + 1}. </td><td>${kompetisi.name} (${
 					kompetisi.area.name
 				})<td></tr>`;
 			});
+
+			// Render Card
 			teamsHTML += `
-			<h4 class="header">${team.name}</h4>
-			<div class="row">
-			<div class="card horizontal col s12 m10 offset-m1">
-				<div class="card-image">
-					<img src="${team.crestUrl}" class="center-item" />
-				</div>
-				<div class="card-stacked">
-					<div class="card-content">
-						<p class="justify-text">
-							${team.name} atau ${team.shortName} adalah klub sepakbola dari ${team.area.name}
-							yang didirikan pada tahun ${team.founded}. Warna jersey mereka adalah
-							${team.clubColors}
-						</p>
-						<table class="highlight">
-							<thead>
-								<tr>
-									<th class="center-text" colspan="2">DATA KLUB</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>Stadion</td><td>: ${team.venue}</td>
-								</tr>
-								<tr>
-									<td>Alamat</td><td>: ${team.address}</td>
-								</tr>
-								<tr>
-									<td>Telepon</td><td>: ${team.phone}</td>
-								</tr>
-								<tr>
-									<td>Email</td><td>: ${team.email}</td>
-								</tr>
-								<tr>
-									<td>Website</td>
-									<td>: <a href="${team.website}" target="_blank" class="blue-text text-darken-1"><b>${team.website}</b></a</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<a class="btn-floating btn-large halfway-fab waves-effect waves-light red" id="delete${index}"><i class="material-icons">delete_forever</i></a>
-				</div>
-			</div>
-				<div class="card horizontal col s12">
-					<div class="card-stacked">
-						<div class="card-content">
-							<table class="highlight col s12 m6">
-								<tr><th colspan="2">KOMPETISI AKTIF</th></tr>
-								<tbody>${renderKompetisi}</tbody>
-							</table>
+					<h4 class="header">${team.name}</h4>
+					<div class="row">
+					<div class="card horizontal col s12 m10 offset-m1">
+						<div class="card-image">
+							<img src="${team.crestUrl}" class="center-item" />
+						</div>
+						<div class="card-stacked">
+							<div class="card-content">
+								<p class="justify-text">
+									${team.name} atau ${team.shortName} adalah klub sepakbola dari ${team.area.name}
+									yang didirikan pada tahun ${team.founded}. Warna jersey mereka adalah
+									${team.clubColors}
+								</p>
+								<table class="highlight">
+									<thead>
+										<tr>
+											<th class="center-text" colspan="2">DATA KLUB</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Stadion</td><td>: ${team.venue}</td>
+										</tr>
+										<tr>
+											<td>Alamat</td><td>: ${team.address}</td>
+										</tr>
+										<tr>
+											<td>Telepon</td><td>: ${team.phone}</td>
+										</tr>
+										<tr>
+											<td>Email</td><td>: ${team.email}</td>
+										</tr>
+										<tr>
+											<td>Website</td>
+											<td>: <a href="${team.website}" target="_blank" class="blue-text text-darken-1"><b>${team.website}</b></a</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<a class="btn-floating btn-large halfway-fab waves-effect waves-light modal-trigger pink darken-1" href="#modal${index}">
+								<i class="material-icons">delete_forever</i>
+							</a>
+							
 						</div>
 					</div>
+					<div class="card horizontal col s12">
+						<div class="card-stacked">
+							<div class="card-content">
+								<table class="highlight col s12 m6">
+									<tr><th colspan="2">KOMPETISI AKTIF</th></tr>
+									<tbody>${renderKompetisi}</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="card-tabs">
+						<ul class="tabs tabs-fixed-width" id="tab${index}">
+							<li class="tab"><a class="active" href="#coach${index}"><b>PELATIH</b></a></li>
+							<li class="tab"><a href="#player${index}"><b>PEMAIN</b></a></li>
+						</ul>
+					</div>
+					<div class="card-content grey lighten-4">
+						<div id="coach${index}">
+							<ol>
+								${renderCoach}
+							</ol>
+						</div>
+						<div id="player${index}">
+							<ol class="two-column">
+								${renderPlayer}
+							</ol>
+						</div>
+					</div>
+					<hr>
+					<div id="modal${index}" class="modal waves-effect waves-light modal${index}">
+					<div class="modal-content">
+						<p>Apakah anda ingin menghapus klub ${team.name} dari daftar favorit?</p>
+					</div>
+					<div class="modal-footer grey lighten-2">
+						<a href="#!" class="modal-action modal-close waves-effect waves-light btn blue darken-3">Tidak</a>
+						<a href="#!" class="modal-action modal-close waves-effect waves-light btn blue darken-3" id="delete${index}">Ya</a>
+					</div>
 				</div>
-			<div class="card-tabs">
-				<ul class="tabs tabs-fixed-width" id="tab${index}">
-					<li class="tab"><a class="active" href="#coach${index}"><b>PELATIH</b></a></li>
-					<li class="tab"><a href="#player${index}"><b>PEMAIN</b></a></li>
-				</ul>
-			</div>
-			<div class="card-content grey lighten-4">
-				<div id="coach${index}">
-					<ol>
-						${renderCoach}
-					</ol>
-				</div>
-				<div id="player${index}">
-					<ol class="two-column">
-						${renderPlayer}
-					</ol>
-				</div>
-			</div><hr>
-			`;
+
+				`;
 
 			// Inisialisasi tab Squad
 			elementReady(`#tab${index}`).then((el) => {
-				let instance = M.Tabs.init(el, {});
+				const instance = M.Tabs.init(el, {});
+			});
+
+			// Inisialisasi Modal
+			elementReady(`.modal${index}`).then(() => {
+				const elems = document.querySelectorAll(`.modal${index}`);
+				const instances = M.Modal.init(elems, {});
 			});
 		});
 
@@ -648,15 +690,12 @@ function getSavedTeams() {
 		teams.forEach(function (team, index) {
 			const btnRemove = document.getElementById(`delete${index}`);
 			btnRemove.addEventListener("click", () => {
-				console.log("Klub akan dihapus dari daftar favorit");
-				if (
-					window.confirm(
-						`Apakah anda akan menghapus klub ${team.name} dari daftar favorit?`
-					)
-				) {
-					deleteById(team.id);
-					loadPage("fav");
-				}
+				deleteById(team.id);
+				loadPage("fav");
+				M.toast({
+					html: `Klub ${team.name} telah dihapus dari daftar favorit.`,
+					classes: "rounded pink darken-1",
+				});
 			});
 		});
 	});

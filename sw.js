@@ -19,7 +19,7 @@ let urlsToCache = [
 	{ url: "/src/js/sw-register.js", revision: "1" },
 	{ url: "/src/js/load-team.js", revision: "1" },
 	{ url: "/src/js/nav.js", revision: "1" },
-	{ url: "/src/js/api.js", revision: "4.9w" },
+	{ url: "/src/js/api.js", revision: "5" },
 	{ url: "/src/js/idb.js", revision: "1" },
 	{ url: "/src/js/db.js", revision: "3b" },
 	{ url: "/src/img/ball.png", revision: "1" },

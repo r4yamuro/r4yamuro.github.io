@@ -306,115 +306,131 @@ function getTeamById() {
 				.then(function (response) {
 					if (response) {
 						response.json().then(function (data) {
-							console.log(data);
-							let renderPlayer = "";
-							let renderCoach = "";
-							let renderKompetisi = "";
-							data.squad.forEach(function (player) {
-								if (player.role === "PLAYER") {
-									renderPlayer += `
-								<li><span class="blue-text">${player.name}</span>, ${player.position} (${player.nationality})</li>
-								`;
-								} else {
-									renderCoach += `
-								<li><span class="blue-text">${player.name}</span>, ${player.role.replace(
-										/_/gi,
-										" "
-									)} (${player.nationality})</li>
-								`;
+							// Mengecek apakah klub sudah tersimpan
+							let saved = false;
+							getById(parseInt(idParam)).then((team) => {
+								try {
+									if (typeof team.id !== "undefined") saved = true;
+								} catch {
+									saved = false;
 								}
-							});
-							data.activeCompetitions.forEach(function (kompetisi, index) {
-								renderKompetisi += `<tr><td>${index + 1}. </td><td>${
-									kompetisi.name
-								} (${kompetisi.area.name})<td></tr>`;
-							});
 
-							let teamHTML = `
-						<h4 class="header container">${data.name}</h4>
-						<div class="row container">
-							<div class="card horizontal col s12 m10 offset-m1">
-								<div class="card-image">
-									<img src="${data.crestUrl}" class="center-item" />
-								</div>
-								<div class="card-stacked">
-									<div class="card-content">
-										<p class="justify-text">
-											${data.name} atau ${data.shortName} adalah klub sepakbola dari ${data.area.name}
-											yang didirikan pada tahun ${data.founded}. Warna jersey mereka adalah
-											${data.clubColors}
-										</p>
-										<table class="highlight">
-											<thead>
-												<tr>
-													<th class="center-text" colspan="2">DATA KLUB</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Stadion</td><td>: ${data.venue}</td>
-												</tr>
-												<tr>
-													<td>Alamat</td><td>: ${data.address}</td>
-												</tr>
-												<tr>
-													<td>Telepon</td><td>: ${data.phone}</td>
-												</tr>
-												<tr>
-													<td>Email</td><td>: ${data.email}</td>
-												</tr>
-												<tr>
-													<td>Website</td>
-													<td>: <a href="${data.website}" target="_blank" class="blue-text text-darken-1"><b>${data.website}</b></a</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-									<a class="btn-floating btn-large halfway-fab waves-effect waves-light light-blue darken-3" id="add"><i class="material-icons">add</i></a>
-								</div>
-							</div>
-							<div class="card horizontal col s12">
-								<div class="card-stacked">
-									<div class="card-content">
-										<table class="highlight col s12 m6">
-											<tr><th colspan="2">KOMPETISI AKTIF</th></tr>
-											<tbody>${renderKompetisi}</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-							<div class="card-tabs">
-								<ul class="tabs tabs-fixed-width" id="tab1">
-									<li class="tab"><a class="active" href="#coach"><b>PELATIH</b></a></li>
-									<li class="tab"><a href="#player"><b>PEMAIN</b></a></li>
-								</ul>
-							</div>
-							<div class="card-content grey lighten-4">
-								<div id="coach">
-									<ol>
-										${renderCoach}
-									</ol>
-								</div>
-								<div id="player">
-									<ol class="two-column">
-										${renderPlayer}
-									</ol>
-								</div>
-							</div>
-						<div>		
-						`;
-							elementReady(`.tabs`).then(function (el) {
-								let instance = M.Tabs.init(el, {});
-							});
+								// Menyusun komponen card secara dinamis
+								let renderPlayer = "";
+								let renderCoach = "";
+								let renderKompetisi = "";
+								data.squad.forEach(function (player) {
+									if (player.role === "PLAYER") {
+										renderPlayer += `
+									<li><span class="blue-text">${player.name}</span>, ${player.position} (${player.nationality})</li>
+									`;
+									} else {
+										renderCoach += `
+									<li><span class="blue-text">${player.name}</span>, ${player.role.replace(
+											/_/gi,
+											" "
+										)} (${player.nationality})</li>
+									`;
+									}
+								});
+								data.activeCompetitions.forEach(function (kompetisi, index) {
+									renderKompetisi += `<tr><td>${index + 1}. </td><td>${
+										kompetisi.name
+									} (${kompetisi.area.name})<td></tr>`;
+								});
 
-							// Sisipkan komponen card ke dalam elemen dengan id #content
-							document.getElementById("body-content").innerHTML = teamHTML;
-							const btnAdd = document.getElementById("add");
-							btnAdd.addEventListener("click", () => {
-								saveForLater(data);
-								M.toast({
-									html: `Klub ${data.name} telah ditambahkan ke daftar favorit.`,
-									classes: "rounded light-blue darken-3",
+								let teamHTML = `
+							<h4 class="header container">${data.name}</h4>
+							<div class="row container">
+								<div class="card horizontal col s12 m10 offset-m1">
+									<div class="card-image">
+										<img src="${data.crestUrl}" class="center-item" />
+									</div>
+									<div class="card-stacked">
+										<div class="card-content">
+											<p class="justify-text">
+												${data.name} atau ${data.shortName} adalah klub sepakbola dari ${data.area.name}
+												yang didirikan pada tahun ${data.founded}. Warna jersey mereka adalah
+												${data.clubColors}
+											</p>
+											<table class="highlight">
+												<thead>
+													<tr>
+														<th class="center-text" colspan="2">DATA KLUB</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>Stadion</td><td>: ${data.venue}</td>
+													</tr>
+													<tr>
+														<td>Alamat</td><td>: ${data.address}</td>
+													</tr>
+													<tr>
+														<td>Telepon</td><td>: ${data.phone}</td>
+													</tr>
+													<tr>
+														<td>Email</td><td>: ${data.email}</td>
+													</tr>
+													<tr>
+														<td>Website</td>
+														<td>: <a href="${
+															data.website
+														}" target="_blank" class="blue-text text-darken-1"><b>${
+									data.website
+								}</b></a</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<a class="btn-floating btn-large halfway-fab waves-effect waves-light light-blue darken-3 ${
+											saved ? "hide" : ""
+										}" id="add"><i class="material-icons">add</i></a>
+									</div>
+								</div>
+								<div class="card horizontal col s12">
+									<div class="card-stacked">
+										<div class="card-content">
+											<table class="highlight col s12 m6">
+												<tr><th colspan="2">KOMPETISI AKTIF</th></tr>
+												<tbody>${renderKompetisi}</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="card-tabs">
+									<ul class="tabs tabs-fixed-width" id="tab1">
+										<li class="tab"><a class="active" href="#coach"><b>PELATIH</b></a></li>
+										<li class="tab"><a href="#player"><b>PEMAIN</b></a></li>
+									</ul>
+								</div>
+								<div class="card-content grey lighten-4">
+									<div id="coach">
+										<ol>
+											${renderCoach}
+										</ol>
+									</div>
+									<div id="player">
+										<ol class="two-column">
+											${renderPlayer}
+										</ol>
+									</div>
+								</div>
+							<div>		
+							`;
+								elementReady(`.tabs`).then(function (el) {
+									let instance = M.Tabs.init(el, {});
+								});
+
+								// Sisipkan komponen card ke dalam elemen dengan id #content
+								document.getElementById("body-content").innerHTML = teamHTML;
+								const btnAdd = document.getElementById("add");
+								btnAdd.addEventListener("click", () => {
+									saveForLater(data);
+									M.toast({
+										html: `Klub ${data.name} telah ditambahkan ke daftar favorit.`,
+										classes: "rounded light-blue darken-3",
+									});
 								});
 							});
 						});
@@ -429,116 +445,130 @@ function getTeamById() {
 			.then(function (data) {
 				// Objek Javascript dari response.json() masuk lewat variabel data.
 
-				// Menyusun komponen card secara dinamis
-
-				console.log(data);
-				let renderPlayer = "";
-				let renderCoach = "";
-				let renderKompetisi = "";
-				data.squad.forEach(function (player) {
-					if (player.role === "PLAYER") {
-						renderPlayer += `
-						<li><span class="blue-text">${player.name}</span> (${player.position})</li>
-						`;
-					} else {
-						renderCoach += `
-						<li><span class="blue-text">${player.name}</span> (${player.role.replace(
-							/_/gi,
-							" "
-						)})</li>
-						`;
+				// Mengecek apakah klub sudah tersimpan
+				let saved = false;
+				getById(parseInt(idParam)).then((team) => {
+					try {
+						if (typeof team.id !== "undefined") saved = true;
+					} catch {
+						saved = false;
 					}
-				});
-				data.activeCompetitions.forEach(function (kompetisi, index) {
-					renderKompetisi += `<tr><td>${index + 1}. </td><td>${
-						kompetisi.name
-					} (${kompetisi.area.name})<td></tr>`;
-				});
 
-				let teamHTML = `
-				<h4 class="header container">${data.name}</h4>
-				<div class="row container">
-					<div class="card horizontal col s12 m10 offset-m1">
-						<div class="card-image">
-							<img src="${data.crestUrl}" class="center-item" />
-						</div>
-						<div class="card-stacked">
-							<div class="card-content">
-								<p class="justify-text">
-									${data.name} atau ${data.shortName} adalah klub sepakbola dari ${data.area.name}
-									yang didirikan pada tahun ${data.founded}. Warna jersey mereka adalah
-									${data.clubColors}
-								</p>
-								<table class="highlight">
-									<thead>
-										<tr>
-											<th class="center-text" colspan="2">DATA KLUB</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>Stadion</td><td>: ${data.venue}</td>
-										</tr>
-										<tr>
-											<td>Alamat</td><td>: ${data.address}</td>
-										</tr>
-										<tr>
-											<td>Telepon</td><td>: ${data.phone}</td>
-										</tr>
-										<tr>
-											<td>Email</td><td>: ${data.email}</td>
-										</tr>
-										<tr>
-											<td>Website</td>
-											<td>: <a href="${data.website}" target="_blank" class="blue-text text-darken-1"><b>${data.website}</b></a</td>
-										</tr>
-									</tbody>
-								</table>
+					// Menyusun komponen card secara dinamis
+					let renderPlayer = "";
+					let renderCoach = "";
+					let renderKompetisi = "";
+					data.squad.forEach(function (player) {
+						if (player.role === "PLAYER") {
+							renderPlayer += `
+							<li><span class="blue-text">${player.name}</span> (${player.position})</li>
+							`;
+						} else {
+							renderCoach += `
+							<li><span class="blue-text">${player.name}</span> (${player.role.replace(
+								/_/gi,
+								" "
+							)})</li>
+							`;
+						}
+					});
+					data.activeCompetitions.forEach(function (kompetisi, index) {
+						renderKompetisi += `<tr><td>${index + 1}. </td><td>${
+							kompetisi.name
+						} (${kompetisi.area.name})<td></tr>`;
+					});
+
+					let teamHTML = `
+					<h4 class="header container">${data.name}</h4>
+					<div class="row container">
+						<div class="card horizontal col s12 m10 offset-m1">
+							<div class="card-image">
+								<img src="${data.crestUrl}" class="center-item" />
 							</div>
-							<a class="btn-floating btn-large halfway-fab waves-effect waves-light light-blue darken-3" id="add"><i class="material-icons">add</i></a>
-						</div>
-					</div>
-					<div class="card horizontal col s12">
-						<div class="card-stacked">
-							<div class="card-content">
-								<table class="highlight col s12 m6">
-									<tr><th colspan="2">KOMPETISI AKTIF</th></tr>
-									<tbody>${renderKompetisi}</tbody>
-								</table>
+							<div class="card-stacked">
+								<div class="card-content">
+									<p class="justify-text">
+										${data.name} atau ${data.shortName} adalah klub sepakbola dari ${data.area.name}
+										yang didirikan pada tahun ${data.founded}. Warna jersey mereka adalah
+										${data.clubColors}
+									</p>
+									<table class="highlight">
+										<thead>
+											<tr>
+												<th class="center-text" colspan="2">DATA KLUB</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Stadion</td><td>: ${data.venue}</td>
+											</tr>
+											<tr>
+												<td>Alamat</td><td>: ${data.address}</td>
+											</tr>
+											<tr>
+												<td>Telepon</td><td>: ${data.phone}</td>
+											</tr>
+											<tr>
+												<td>Email</td><td>: ${data.email}</td>
+											</tr>
+											<tr>
+												<td>Website</td>
+												<td>: <a href="${
+													data.website
+												}" target="_blank" class="blue-text text-darken-1"><b>${
+						data.website
+					}</b></a</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<a class="btn-floating btn-large halfway-fab waves-effect waves-light light-blue darken-3 ${
+									saved ? "hide" : ""
+								}" id="add"><i class="material-icons">add</i></a>
 							</div>
 						</div>
-					</div>
-					<div class="card-tabs">
-						<ul class="tabs tabs-fixed-width" id="tab1">
-							<li class="tab"><a class="active" href="#coach"><b>PELATIH</b></a></li>
-							<li class="tab"><a href="#player"><b>PEMAIN</b></a></li>
-						</ul>
-					</div>
-					<div class="card-content grey lighten-4">
-						<div id="coach">
-							<ol>
-								${renderCoach}
-							</ol>
+						<div class="card horizontal col s12">
+							<div class="card-stacked">
+								<div class="card-content">
+									<table class="highlight col s12 m6">
+										<tr><th colspan="2">KOMPETISI AKTIF</th></tr>
+										<tbody>${renderKompetisi}</tbody>
+									</table>
+								</div>
+							</div>
 						</div>
-						<div id="player">
-							<ol class="two-column">
-								${renderPlayer}
-							</ol>
+						<div class="card-tabs">
+							<ul class="tabs tabs-fixed-width" id="tab1">
+								<li class="tab"><a class="active" href="#coach"><b>PELATIH</b></a></li>
+								<li class="tab"><a href="#player"><b>PEMAIN</b></a></li>
+							</ul>
 						</div>
-					</div>
-				<div>				
-				`;
-				elementReady(`#tab1`).then(function (el) {
-					const instance = M.Tabs.init(el, {});
-				});
-				// Sisipkan komponen card ke dalam elemen dengan id #content
-				document.getElementById("body-content").innerHTML = teamHTML;
-				const btnAdd = document.getElementById("add");
-				btnAdd.addEventListener("click", () => {
-					saveForLater(data);
-					M.toast({
-						html: `Klub ${data.name} telah ditambahkan ke daftar favorit.`,
-						classes: "rounded light-blue darken-3",
+						<div class="card-content grey lighten-4">
+							<div id="coach">
+								<ol>
+									${renderCoach}
+								</ol>
+							</div>
+							<div id="player">
+								<ol class="two-column">
+									${renderPlayer}
+								</ol>
+							</div>
+						</div>
+					<div>				
+					`;
+					elementReady(`#tab1`).then(function (el) {
+						const instance = M.Tabs.init(el, {});
+					});
+					// Sisipkan komponen card ke dalam elemen dengan id #content
+					document.getElementById("body-content").innerHTML = teamHTML;
+					const btnAdd = document.getElementById("add");
+					btnAdd.addEventListener("click", () => {
+						saveForLater(data);
+						M.toast({
+							html: `Klub ${data.name} telah ditambahkan ke daftar favorit.`,
+							classes: "rounded light-blue darken-3",
+						});
 					});
 				});
 			})

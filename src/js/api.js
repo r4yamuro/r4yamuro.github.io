@@ -427,10 +427,12 @@ function getTeamById() {
 								const btnAdd = document.getElementById("add");
 								btnAdd.addEventListener("click", () => {
 									saveForLater(data);
-									location.reload();
 									M.toast({
 										html: `Klub ${data.name} telah ditambahkan ke daftar favorit.`,
 										classes: "rounded light-blue darken-3",
+										completeCallback: function () {
+											location.reload();
+										},
 									});
 								});
 							});
@@ -566,10 +568,12 @@ function getTeamById() {
 					const btnAdd = document.getElementById("add");
 					btnAdd.addEventListener("click", () => {
 						saveForLater(data);
-						location.reload();
 						M.toast({
 							html: `Klub ${data.name} telah ditambahkan ke daftar favorit.`,
 							classes: "rounded light-blue darken-3",
+							completeCallback: function () {
+								location.reload();
+							},
 						});
 					});
 				});

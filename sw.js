@@ -7,12 +7,12 @@ else console.log(`Workbox gagal dimuat`);
 // Precaching App Shell
 
 let urlsToCache = [
-	{ url: "/index.html", revision: "3a" },
+	{ url: "/index.html", revision: "3c" },
 	{ url: "/nav.html", revision: "2" },
-	{ url: "/teams.html", revision: "3a" },
+	{ url: "/teams.html", revision: "3c" },
 	{ url: "/sw.js", revision: "1" },
-	{ url: "/src/pages/home.html", revision: "1" },
-	{ url: "/src/pages/fav.html", revision: "1" },
+	{ url: "/src/pages/home.html", revision: "1c" },
+	{ url: "/src/pages/fav.html", revision: "1c" },
 	{ url: "/src/css/materialize.min.css", revision: "1" },
 	{ url: "/src/css/style.css", revision: "2a" },
 	{ url: "/src/js/materialize.min.js", revision: "1" },
